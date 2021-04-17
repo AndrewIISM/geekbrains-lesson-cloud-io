@@ -1,5 +1,6 @@
 package gb.cloud.server.service.impl;
 
+import gb.cloud.domain.Command;
 import gb.cloud.server.factory.Factory;
 import gb.cloud.server.service.CommandDictionaryService;
 import gb.cloud.server.service.CommandService;
@@ -29,11 +30,9 @@ public class CommandDictionaryServiceImpl implements CommandDictionaryService {
     }
 
     @Override
-    public String processCommand(String command) {
-        String[] commandParts = command.split("\\s");
-
-        if (commandParts.length > 0 && commandDictionary.containsKey(commandParts[0])) {
-            return commandDictionary.get(commandParts[0]).processCommand(command);
+    public String processCommand(Command command) {
+        if (commandDictionary.containsKey(command.getCommandName())) {
+            return commandDictionary.get(command.getCommandName()).processCommand(command);
         }
 
         return "Error command";

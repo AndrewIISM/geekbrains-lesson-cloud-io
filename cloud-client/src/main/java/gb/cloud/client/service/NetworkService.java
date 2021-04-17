@@ -1,11 +1,13 @@
 package gb.cloud.client.service;
 
 
+import gb.cloud.domain.Command;
+
 public interface NetworkService {
 
-    void sendCommand(String command);
+    void sendCommand(Command command);
 
-    int readCommandResult(byte[] buffer);
+    String readCommandResult();
 
     void closeConnection();
 

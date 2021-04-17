@@ -1,6 +1,9 @@
 package gb.cloud.client.service.impl;
 
 import gb.cloud.client.service.NetworkService;
+import gb.cloud.domain.Command;
+import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
+import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +19,8 @@ public class IONetworkService implements NetworkService {
     private static IONetworkService instance;
 
     public static Socket socket;
-    public static InputStream in;
-    public static OutputStream out;
+    public static ObjectDecoderInputStream in;
+    public static ObjectEncoderOutputStream out;
 
     private IONetworkService() { }
 
@@ -42,17 +45,17 @@ public class IONetworkService implements NetworkService {
 
     private static void initializeIOStreams() {
         try {
-            out = socket.getOutputStream();
-            in = socket.getInputStream();
+            out = new ObjectEncoderOutputStream(socket.getOutputStream());
+            in = new ObjectDecoderInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void sendCommand(String command) {
+    public void sendCommand(Command command) {
         try {
-            out.write(command.getBytes(StandardCharsets.UTF_8));
+            out.writeObject(command);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,10 +63,10 @@ public class IONetworkService implements NetworkService {
     }
 
     @Override
-    public int readCommandResult(byte[] buffer) {
+    public String readCommandResult() {
         try {
-            return in.read(buffer);
-        } catch (IOException e) {
+            return (String) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("Read command result exception: " + e.getMessage());
         }
     }
