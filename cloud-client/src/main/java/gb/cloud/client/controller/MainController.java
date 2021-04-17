@@ -27,8 +27,10 @@ public class MainController implements Initializable {
 
     private void createCommandResultHandler() {
         new Thread(() -> {
+            byte[] buffer = new byte[1024];
             while (true) {
-                String resultCommand = networkService.readCommandResult();
+                int countReadBytes = networkService.readCommandResult(buffer);
+                String resultCommand = new String(buffer, 0, countReadBytes);
                 Platform.runLater(() -> commandResultTextArea.appendText(resultCommand + System.lineSeparator()));
             }
         }).start();

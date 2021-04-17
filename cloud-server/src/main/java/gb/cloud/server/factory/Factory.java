@@ -6,7 +6,7 @@ import gb.cloud.server.service.CommandService;
 import gb.cloud.server.service.ServerService;
 import gb.cloud.server.service.impl.CommandDictionaryServiceImpl;
 import gb.cloud.server.service.impl.IOClientService;
-import gb.cloud.server.service.impl.SocketServerService;
+import gb.cloud.server.service.impl.NettyServerService;
 import gb.cloud.server.service.impl.command.ViewFilesInDirCommand;
 
 import java.net.Socket;
@@ -16,7 +16,7 @@ import java.util.List;
 public class Factory {
 
     public static ServerService getServerService() {
-        return SocketServerService.getInstance();
+        return new NettyServerService();
     }
 
     public static ClientService getClientService(Socket socket) {
