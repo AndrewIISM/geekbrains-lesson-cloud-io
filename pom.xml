@@ -27,6 +27,7 @@
         <module>cloud-server</module>
         <module>cloud-client</module>
         <module>common-domain</module>
+        <module>big-files-netty</module>
     </modules>
 
     <properties>
